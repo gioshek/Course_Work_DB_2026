@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environment
+backend/venv/
+venv/
+.env
+backend/.env
+frontend/.env
+*.env
+
+# Node / React / Vite
+frontend/node_modules/
+node_modules/
+frontend/dist/
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary / backup files
+*.bak
+*.backup
+*.tmp
+*.temp
+*~
+*.swp
+
+# Python local files
+*.sqlite3
+*.db
+
+# SQL Server / database local files
+*.bak
+*.trn
+*.mdf
+*.ldf
+
+# Local generated archives
+*.zip
+*.rar
+*.7z
