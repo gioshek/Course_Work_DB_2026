@@ -2,13 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import call_db
-from app.routers import books, users, subscriptions, admin
+from app.routers import admin, books, subscriptions, users
 
 
 app = FastAPI(
     title="BookStream API",
     description="Backend API для сайта онлайн-чтения цифровых книг.",
-    version="1.0.0",
+    version="2.0.0",
 )
 
 
@@ -26,6 +26,7 @@ app.include_router(users.router)
 app.include_router(subscriptions.router)
 app.include_router(admin.router)
 
+
 @app.get("/")
 def root():
     return {
@@ -36,14 +37,7 @@ def root():
 
 @app.get("/health")
 def health_check():
-    result_sets = call_db(
-        """
-        SELECT
-            DB_NAME() AS CurrentDatabase,
-            CAST(SERVERPROPERTY('ProductVersion') AS NVARCHAR(50)) AS SqlServerVersion
-        """
-    )
-
+    result_sets = call_db("EXEC dbo.usp_HealthCheck")
     database_info = result_sets[0][0] if result_sets and result_sets[0] else {}
 
     return {

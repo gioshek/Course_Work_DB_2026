@@ -3,19 +3,20 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-.Python
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
-# Virtual environment
+# Virtual environments
 backend/venv/
 venv/
+
+# Environment variables
 .env
+*.env
 backend/.env
 frontend/.env
-*.env
 
 # Node / React / Vite
 frontend/node_modules/
@@ -28,7 +29,7 @@ dist/
 .vscode/
 .idea/
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
 
@@ -38,7 +39,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Temporary / backup files
+# Temporary and backup files
 *.bak
 *.backup
 *.tmp
@@ -46,17 +47,12 @@ yarn-error.log*
 *~
 *.swp
 
-# Python local files
-*.sqlite3
-*.db
-
-# SQL Server / database local files
-*.bak
-*.trn
-*.mdf
-*.ldf
-
-# Local generated archives
+# Archives
 *.zip
 *.rar
 *.7z
+
+# Local database files
+*.mdf
+*.ldf
+*.trn

@@ -17,5 +17,11 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Загрузчики данных вызываются при открытии страниц намеренно.
+      // Для учебного SPA отдельная мемоизация каждого loader-а ухудшает читаемость.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+    },
   },
 ])

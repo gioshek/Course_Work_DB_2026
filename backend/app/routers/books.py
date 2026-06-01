@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from rapidfuzz import fuzz
 
-from app.database import call_db, get_connection, rows_to_dicts
+from app.database import call_db
 from app.schemas import AddReviewRequest, PurchaseBookRequest, UpdateReadingProgressRequest
 
 
@@ -17,11 +17,6 @@ router = APIRouter(prefix="/books", tags=["Books"])
 
 def raise_database_error(error: Exception):
     raise HTTPException(status_code=400, detail=str(error))
-
-
-def get_single_row(cursor):
-    rows = rows_to_dicts(cursor)
-    return rows[0] if rows else None
 
 
 # ============================================================
@@ -368,26 +363,11 @@ def apply_fuzzy_genre_filter(books: list[dict], genre_query: str | None) -> list
 
 @router.get("/")
 def get_book_catalog(
-    search: Optional[str] = Query(
-        None,
-        description="Нечёткий поиск по названию, автору, жанру, издательству или описанию",
-    ),
-    genre: Optional[str] = Query(
-        None,
-        description="Фильтр по жанру",
-    ),
-    only_free: bool = Query(
-        False,
-        description="Показать только бесплатные книги",
-    ),
-    available_by_subscription: Optional[bool] = Query(
-        None,
-        description="Фильтр доступности по подписке",
-    ),
-
-    # Старые имена параметров оставляем для совместимости.
-    # Сайт сейчас отправляет search и genre.
-    # Если где-то останется search_text или genre_name, оно тоже сработает.
+    search: Optional[str] = Query(None, description="Нечёткий поиск по названию, автору, жанру, издательству или описанию"),
+    genre: Optional[str] = Query(None, description="Фильтр по жанру"),
+    only_free: bool = Query(False, description="Показать только бесплатные книги"),
+    available_by_subscription: Optional[bool] = Query(None, description="Доступность по подписке"),
+    only_premium: bool = Query(False, description="Показать только премиальные книги"),
     search_text: Optional[str] = Query(None, include_in_schema=False),
     genre_name: Optional[str] = Query(None, include_in_schema=False),
 ):
@@ -395,175 +375,100 @@ def get_book_catalog(
         effective_search = search_text if search_text is not None else search
         effective_genre = genre_name if genre_name is not None else genre
 
-        # Берём каталог из БД без SQL-поиска.
-        # Нечёткий поиск с опечатками выполняем в Python через RapidFuzz.
         result_sets = call_db(
             """
             EXEC dbo.usp_GetBookCatalog
                 @SearchText = ?,
                 @GenreName = ?,
                 @OnlyFree = ?,
-                @AvailableBySubscription = ?
+                @AvailableBySubscription = ?,
+                @OnlyPremium = ?
             """,
             (
                 None,
                 None,
                 1 if only_free else None,
                 available_by_subscription,
+                1 if only_premium else None,
             ),
         )
 
         books = result_sets[0] if result_sets else []
-
         books = apply_fuzzy_genre_filter(books, effective_genre)
         books = apply_fuzzy_book_search(books, effective_search)
-
         return books
-
     except Exception as error:
         raise_database_error(error)
 
-
-# ============================================================
-# ПОЛУЧЕНИЕ КНИГИ ПО ID
-# ============================================================
 
 @router.get("/{book_id}")
 def get_book_by_id(book_id: int):
     try:
-        result_sets = call_db(
-            "EXEC dbo.usp_GetBookById @BookId = ?",
-            (book_id,),
-        )
-
+        result_sets = call_db("EXEC dbo.usp_GetBookById @BookId = ?", (book_id,))
         book = result_sets[0][0] if result_sets and result_sets[0] else None
         reviews = result_sets[1] if len(result_sets) > 1 else []
-
-        return {
-            "book": book,
-            "reviews": reviews,
-        }
-
+        return {"book": book, "reviews": reviews}
     except Exception as error:
         raise_database_error(error)
 
 
-# ============================================================
-# ПОЛУЧЕНИЕ ТЕКСТА КНИГИ ДЛЯ ЧТЕНИЯ
-# ============================================================
+@router.get("/{book_id}/price-preview")
+def get_book_price_preview(book_id: int, user_id: int = Query(...), promo_code: Optional[str] = Query(None)):
+    try:
+        result_sets = call_db(
+            "EXEC dbo.usp_GetBookPricePreview @UserId = ?, @BookId = ?, @PromoCode = ?",
+            (user_id, book_id, promo_code),
+        )
+        return result_sets[0][0] if result_sets and result_sets[0] else None
+    except Exception as error:
+        raise_database_error(error)
+
 
 @router.get("/{book_id}/content")
 def get_book_content(book_id: int, user_id: int = Query(...)):
     try:
-        result_sets = call_db(
-            """
-            EXEC dbo.usp_GetBookContentForUser
-                @UserId = ?,
-                @BookId = ?
-            """,
-            (user_id, book_id),
-        )
-
+        result_sets = call_db("EXEC dbo.usp_GetBookContentForUser @UserId = ?, @BookId = ?", (user_id, book_id))
         return result_sets[0][0] if result_sets and result_sets[0] else None
-
     except Exception as error:
         raise_database_error(error)
 
-
-# ============================================================
-# ПОКУПКА КНИГИ
-# ============================================================
 
 @router.post("/{book_id}/purchase")
 def buy_book(book_id: int, request: PurchaseBookRequest):
     try:
         result_sets = call_db(
-            """
-            EXEC dbo.usp_BuyBook
-                @UserId = ?,
-                @BookId = ?,
-                @PaymentMethod = ?;
-            """,
-            (
-                request.user_id,
-                book_id,
-                request.payment_method,
-            ),
+            "EXEC dbo.usp_BuyBook @UserId = ?, @BookId = ?, @PaymentMethod = ?, @PromoCode = ?",
+            (request.user_id, book_id, request.payment_method, request.promo_code),
         )
-
         purchase = result_sets[0][0] if result_sets and result_sets[0] else None
-
-        if purchase is None:
-            return {
-                "message": "Покупка выполнена",
-            }
-
-        final_price = float(purchase.get("FinalPrice") or purchase.get("PurchasePrice") or 0)
-        discount_percent = float(purchase.get("DiscountPercent") or 0)
-        balance = purchase.get("Balance")
-
-        if final_price == 0:
-            message = "Бесплатная книга добавлена в библиотеку"
-        elif discount_percent > 0:
-            message = f"Книга куплена со скидкой {discount_percent:.2f}%"
-        else:
-            message = "Книга успешно куплена"
-
         return {
-            "message": message,
+            "message": "Книга успешно куплена",
             "purchase": purchase,
-            "Balance": float(balance) if balance is not None else None,
-            "BasePrice": float(purchase.get("BasePrice") or 0),
-            "DiscountPercent": discount_percent,
-            "FinalPrice": final_price,
+            "Balance": purchase.get("Balance") if purchase else None,
         }
-
     except Exception as error:
         raise_database_error(error)
 
-
-# ============================================================
-# ДОБАВЛЕНИЕ ОТЗЫВА
-# ============================================================
 
 @router.post("/{book_id}/reviews")
 def add_review(book_id: int, request: AddReviewRequest):
     try:
         result_sets = call_db(
-            """
-            EXEC dbo.usp_AddReview
-                @UserId = ?,
-                @BookId = ?,
-                @Rating = ?,
-                @ReviewText = ?
-            """,
+            "EXEC dbo.usp_AddReview @UserId = ?, @BookId = ?, @Rating = ?, @ReviewText = ?",
             (request.user_id, book_id, request.rating, request.review_text),
         )
-
         return result_sets[0][0] if result_sets and result_sets[0] else {"message": "Отзыв сохранён"}
-
     except Exception as error:
         raise_database_error(error)
 
-
-# ============================================================
-# ОБНОВЛЕНИЕ ПРОГРЕССА ЧТЕНИЯ
-# ============================================================
 
 @router.put("/{book_id}/progress")
 def update_reading_progress(book_id: int, request: UpdateReadingProgressRequest):
     try:
         result_sets = call_db(
-            """
-            EXEC dbo.usp_UpdateReadingProgress
-                @UserId = ?,
-                @BookId = ?,
-                @CurrentPage = ?
-            """,
+            "EXEC dbo.usp_UpdateReadingProgress @UserId = ?, @BookId = ?, @CurrentPage = ?",
             (request.user_id, book_id, request.current_page),
         )
-
         return result_sets[0][0] if result_sets and result_sets[0] else {"message": "Прогресс чтения обновлён"}
-
     except Exception as error:
         raise_database_error(error)

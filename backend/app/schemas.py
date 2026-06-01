@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field
@@ -10,6 +11,7 @@ class RegisterUserRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=100)
     email: EmailStr
     password: str = Field(..., min_length=4, max_length=100)
+    date_of_birth: Optional[date] = None
 
 
 class LoginUserRequest(BaseModel):
@@ -24,12 +26,13 @@ class TopUpBalanceRequest(BaseModel):
 
 class PurchaseBookRequest(BaseModel):
     user_id: int
-    payment_method: PaymentMethod = "Balance"
+    payment_method: Literal["Balance"] = "Balance"
+    promo_code: Optional[str] = Field(None, max_length=50)
 
 
 class CreateSubscriptionRequest(BaseModel):
     plan_id: int
-    payment_method: PaymentMethod = "Balance"
+    payment_method: Literal["Balance"] = "Balance"
 
 
 class AddReviewRequest(BaseModel):
@@ -56,11 +59,13 @@ class AdminCreateBookRequest(BaseModel):
     price: float = Field(..., ge=0)
 
     is_free: bool = False
+    is_premium: bool = False
     is_available_by_subscription: bool = True
     cover_image_url: Optional[str] = None
 
     content_text: str = Field(..., min_length=1)
-    content_format: str = "TEXT"
+    content_format: Literal["TEXT", "HTML", "EPUB", "PDF"] = "TEXT"
+
 
 class AdminCreatePublisherRequest(BaseModel):
     publisher_name: str = Field(..., min_length=1, max_length=255)
