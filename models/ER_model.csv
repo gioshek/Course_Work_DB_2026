@@ -1,0 +1,48 @@
+# label: <b>%name%</b><hr><div align="center">%identifiers%</div><hr><div align="center">%attributes%</div>
+# style: rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;verticalAlign=top;spacing=8;fontSize=11;
+# identity: id
+# namespace: er-
+# left: x
+# top: y
+# width: 230
+# height: auto
+# padding: 8
+# layout: none
+# ignore: id,x,y,rel_role_users,rel_user_audit,rel_publisher_books,rel_book_content,rel_book_authors,rel_book_genres,rel_user_payments,rel_user_purchases,rel_book_purchases,rel_payment_purchases,rel_plan_subscriptions,rel_user_subscriptions,rel_payment_subscriptions,rel_user_reviews,rel_book_reviews,rel_user_favorites,rel_book_favorites,rel_user_progress,rel_book_progress,rel_book_promotions
+# connect: {"from": "rel_role_users", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_audit", "to": "id", "label": "0..1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERzeroToOne;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_publisher_books", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_content", "to": "id", "label": "1 : 0..1", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToOne;"}
+# connect: {"from": "rel_book_authors", "to": "id", "label": "1..N : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERoneToMany;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_genres", "to": "id", "label": "1..N : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERoneToMany;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_payments", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_purchases", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_purchases", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_payment_purchases", "to": "id", "label": "0..1 : 0..1", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERzeroToOne;endArrow=ERzeroToOne;"}
+# connect: {"from": "rel_plan_subscriptions", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_subscriptions", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_payment_subscriptions", "to": "id", "label": "0..1 : 0..1", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERzeroToOne;endArrow=ERzeroToOne;"}
+# connect: {"from": "rel_user_reviews", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_reviews", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_favorites", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_favorites", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_user_progress", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_progress", "to": "id", "label": "1 : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERone;endArrow=ERzeroToMany;"}
+# connect: {"from": "rel_book_promotions", "to": "id", "label": "0..N : 0..N", "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;fontColor=#000000;startArrow=ERzeroToMany;endArrow=ERzeroToMany;"}
+id,name,identifiers,attributes,x,y,rel_role_users,rel_user_audit,rel_publisher_books,rel_book_content,rel_book_authors,rel_book_genres,rel_user_payments,rel_user_purchases,rel_book_purchases,rel_payment_purchases,rel_plan_subscriptions,rel_user_subscriptions,rel_payment_subscriptions,rel_user_reviews,rel_book_reviews,rel_user_favorites,rel_book_favorites,rel_user_progress,rel_book_progress,rel_book_promotions
+ROLES,ROLES,RoleName,,40,20,USERS,,,,,,,,,,,,,,,,,,,
+USERS,USERS,Email,Username<br>PasswordHash<br>DateOfBirth<br>RegistrationDate<br>IsActive<br>Balance,360,20,,AUDIT_LOG,,,,,PAYMENTS,PURCHASES,,,,SUBSCRIPTIONS,,REVIEWS,,FAVORITES,,READING_PROGRESS,,
+AUDIT_LOG,AUDIT LOG,LogNumber,TableName<br>ActionName<br>RecordNumber<br>User<br>Description<br>CreatedAt,700,20,,,,,,,,,,,,,,,,,,,,
+PUBLISHERS,PUBLISHERS,PublisherName,,40,280,,,BOOKS,,,,,,,,,,,,,,,,,
+BOOKS,BOOKS,BookCatalogNumber,Title<br>Description<br>PublicationYear<br>AgeLimit<br>PageCount<br>Price<br>IsFree<br>IsPremium<br>IsAvailableBySubscription<br>CoverImageUrl<br>CreatedAt,360,280,,,,BOOK_CONTENT,AUTHORS,GENRES,,,PURCHASES,,,,,,REVIEWS,,FAVORITES,,READING_PROGRESS,PROMOTIONS
+BOOK_CONTENT,BOOK CONTENT,BookCatalogNumber,ContentText<br>ContentFormat<br>UploadedAt,700,280,,,,,,,,,,,,,,,,,,,,
+AUTHORS,AUTHORS,FirstName<br>LastName,,40,580,,,,,,,,,,,,,,,,,,,,
+GENRES,GENRES,GenreName,,360,580,,,,,,,,,,,,,,,,,,,,
+SUBSCRIPTION_PLANS,SUBSCRIPTION PLANS,PlanName,Price<br>DurationDays<br>Description<br>IsActive,700,580,,,,,,,,,,,SUBSCRIPTIONS,,,,,,,,,
+PAYMENTS,PAYMENTS,PaymentNumber,Amount<br>PaymentDate<br>PaymentMethod<br>PaymentStatus<br>TransactionNumber,40,870,,,,,,,,,,PURCHASES,,,SUBSCRIPTIONS,,,,,,,
+PURCHASES,PURCHASES,PurchaseNumber,PurchaseDate<br>PurchasePrice<br>AppliedPromoCode<br>AppliedDiscountPercent,360,870,,,,,,,,,,,,,,,,,,,,
+SUBSCRIPTIONS,USER SUBSCRIPTIONS,SubscriptionNumber,StartDate<br>EndDate<br>IsActive,700,870,,,,,,,,,,,,,,,,,,,,
+REVIEWS,REVIEWS,ReviewNumber,Rating<br>ReviewText<br>CreatedAt,40,1120,,,,,,,,,,,,,,,,,,,,
+FAVORITES,FAVORITES,Email<br>BookCatalogNumber,AddedAt,360,1120,,,,,,,,,,,,,,,,,,,,
+READING_PROGRESS,READING PROGRESS,Email<br>BookCatalogNumber,CurrentPage<br>ProgressPercent<br>LastReadAt,700,1120,,,,,,,,,,,,,,,,,,,,
+PROMOTIONS,PROMOTIONS,PromoCode,PromotionName<br>DiscountPercent<br>StartDate<br>EndDate<br>IsActive<br>AppliesToAllBooks<br>RequiresBirthday<br>IsSystem<br>CreatedAt,1040,1120,,,,,,,,,,,,,,,,,,,,

@@ -84,7 +84,11 @@ CREATE TABLE dbo.AuditLog
     Description NVARCHAR(1000) NULL,
     CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_AuditLog_CreatedAt DEFAULT SYSDATETIME(),
 
-    CONSTRAINT PK_AuditLog PRIMARY KEY (LogId)
+    CONSTRAINT PK_AuditLog PRIMARY KEY (LogId),
+    CONSTRAINT FK_AuditLog_UserAccount FOREIGN KEY (UserId)
+        REFERENCES dbo.UserAccount(UserId)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
 );
 GO
 
