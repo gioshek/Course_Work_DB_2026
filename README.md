@@ -25,18 +25,31 @@
 
 ```text
 Course_Work_DB_2026/
-├── backend/                 # FastAPI backend
+├── backend/                         # FastAPI backend
 │   ├── app/
-│   │   ├── routers/         # API endpoints
-│   │   ├── database.py      # подключение к SQL Server
-│   │   ├── schemas.py       # модели запросов
-│   │   └── main.py
-│   ├── .env.example
-│   └── requirements.txt
-├── database/                # SQL-файлы для чистой сборки БД
-├── frontend/                # React + Vite
-├── models/                  # CSV для импорта диаграмм в diagrams.net
-├── scripts/                 # короткие скрипты запуска
+│   │   ├── routers/                 # группы API-маршрутов
+│   │   │   ├── books.py             # каталог, нечёткий поиск, карточка книги,
+│   │   │   │                        # расчёт цены, покупка, чтение, отзывы и прогресс
+│   │   │   ├── users.py             # регистрация, вход, профиль, библиотека,
+│   │   │   │                        # баланс, подписки и избранное
+│   │   │   ├── subscriptions.py     # получение доступных тарифов подписки
+│   │   │   └── admin.py             # права администратора, справочники, книги,
+│   │   │                            # акции, аудит, статистика и отчёты
+│   │   ├── database.py              # подключение к SQL Server через pyodbc,
+│   │   │                            # выполнение запросов, commit и rollback
+│   │   ├── schemas.py               # Pydantic-модели и валидация входных данных
+│   │   └── main.py                  # создание FastAPI-приложения,
+│   │                                # подключение роутеров и health-check
+│   ├── .env.example                 # пример параметров подключения к SQL Server
+│   └── requirements.txt             # Python-зависимости backend
+├── database/                        # SQL-файлы для чистой сборки БД
+├── frontend/                        # клиентская часть React + Vite
+│   └── src/
+│       ├── api.js                   # Axios-клиент для обращения к backend
+│       ├── App.jsx                  # страницы сайта и логика интерфейса
+│       └── App.css                  # стили интерфейса
+├── models/                          # CSV и PNG моделей для diagrams.net
+├── scripts/                         # короткие скрипты запуска
 └── README.md
 ```
 
